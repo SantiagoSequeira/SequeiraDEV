@@ -1,0 +1,11 @@
+:host {
+    --sds-c-textarea-sizing-min-height: 60vh;
+}
+.centered {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.text-input-container {
+    width: 70%;
+}

@@ -1,0 +1,20 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" controller="SubPathRenderComponentController">
+    <aura:attribute name="currentPath" type="String" default="" />
+    <aura:attribute name="visiblePaths" type="List" default="" />
+    <aura:attribute name="paths" type="Map" default="" />
+    <aura:attribute name="selectedStage" type="String" default="" />
+    <aura:attribute name="channel" type="String" default="MAIN" />
+    <aura:attribute name="renderComponent" type="String" default="" />
+    <aura:attribute name="subPathWiredMode" type="Boolean" default="true" />
+    <aura:attribute name="hideUpdateButton" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:registerEvent name="SubPathRenderNewComponent" type="c:SubPathRenderNewComponent"/>
+    <aura:registerEvent name="SubPathRenderNotWiredEvent" type="c:SubPathRenderNotWiredEvent"/>
+
+    <lightning:path aura:id="path" recordId="{!v.recordId}" variant="linear" hideUpdateButton="{!v.hideUpdateButton}"
+        onselect="{!c.handleSelect}" />
+    <aura:if isTrue="{!v.subPathWiredMode}">
+        <c:SubPathRenderComponent visiblePaths="{!v.visiblePaths}" wiredMode="false" />
+    </aura:if>
+</aura:component>

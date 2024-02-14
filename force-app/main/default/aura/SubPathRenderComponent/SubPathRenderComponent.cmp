@@ -1,0 +1,22 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" >
+    <aura:attribute name="wiredMode" type="Boolean" default="false" />
+    <aura:attribute name="channel" type="String" default="MAIN" />
+    <aura:attribute name="currentStep" type="String" default="" />
+    <aura:attribute name="visiblePaths" type="List" default="" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:registerEvent name="SubPathRenderNewComponent" type="c:SubPathRenderNewComponent"/>
+    <aura:handler event="c:SubPathRenderNotWiredEvent" action="{!c.handleApplicationEvent}"/>
+    <aura:if isTrue="{!v.visiblePaths.length > 0}">
+        <lightning:card title="">
+            <p class="slds-p-horizontal_small">
+                <lightning:progressIndicator type="path" currentStep="{!v.currentStep}" variant="base">
+                    <aura:iteration items="{!v.visiblePaths}" var="item">
+                        <lightning:progressStep label="{! item.label }" value="{! item.position }" onstepfocus="{! c.handleX }"/>
+                    </aura:iteration>
+                </lightning:progressIndicator>
+            </p>
+        </lightning:card>
+    </aura:if>
+</aura:component>

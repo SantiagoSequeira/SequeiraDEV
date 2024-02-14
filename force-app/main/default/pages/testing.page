@@ -1,0 +1,16 @@
+<apex:page >
+    <style>
+    	.test {
+        	color: red;
+        }
+        @media print {
+        	.test{
+        		color: blue;
+        	}
+        }
+    </style>
+    
+    <p class="test">
+        Holis
+    </p>
+</apex:page>

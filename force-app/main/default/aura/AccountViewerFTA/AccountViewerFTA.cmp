@@ -1,0 +1,19 @@
+<aura:component controller="AccountViewer" implements="flexipage:availableForAllPageTypes" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="hasError" type="Boolean" default="false" />
+    <aura:attribute name="data" type="Object" />
+	<aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner alternativeText="Loading" size="small" />
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.hasError}">
+                Por un demonio, lo que faltaba!
+                <aura:set attribute="else">
+                    <lightning:card title="Details">
+                        <lightning:input type="text" label="User ID:" value="{!v.data.userId}" disabled="true"/>
+                    </lightning:card>
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+</aura:component>

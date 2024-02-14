@@ -1,0 +1,10 @@
+<template>
+    <div>
+        Mis Notas:
+    </div>
+    <div>
+        <template for:each={notas} for:item="nota">
+            <c-mi-nota nota={nota} key={nota.Id}></c-mi-nota>
+        </template>
+    </div>
+</template>

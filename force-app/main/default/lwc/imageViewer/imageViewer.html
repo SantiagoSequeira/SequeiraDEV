@@ -1,0 +1,35 @@
+<template>
+    <div style="width:100%;text-align:center;margin:20px 0" class="slds-text-heading_medium">
+        {title}
+    </div>
+    <div class="container">
+        <div style="overflow: hidden;display: inline-block;" class="main">
+            <div class="tooltip" style="max-height: 200px;overflow: hidden;display:inline-block">
+                <img src="" class="image-thumb" style="height: 100%" />
+                <span>
+                    <div class="image-show" style="background-image: url();background-repeat: no-repeat;"></div>
+                </span>
+            </div>
+        </div>
+        <template if:false={isLoaded}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+	</div>
+    <div class="button-container">
+        <template if:true={isCropperDisabled}>
+            <lightning-button-icon icon-name="utility:upload"  onclick={uploadNewImage} title="Subir imagen" ></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:skip_back"  onclick={rotateImageLeft} title="Rotar izquierda" ></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:skip_forward"  onclick={rotateImageRight} title="Rotar derecha"></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:cut"  onclick={activateCrop} title="Recortar"></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:save"  onclick={saveImage} title="Guardar"></lightning-button-icon>
+        </template>
+        <template if:false={isCropperDisabled}>
+            <lightning-button-icon icon-name="utility:close"  onclick={cancelCrop} title="Cancelar"></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:check"  onclick={confirmCrop} title="Confirmar"></lightning-button-icon>
+        </template>
+        <template if:true={isModified}>
+            <lightning-button-icon icon-name="utility:undo"  onclick={restoreImage} title="Restaurar original"></lightning-button-icon>
+        </template>
+    </div>
+    
+</template>

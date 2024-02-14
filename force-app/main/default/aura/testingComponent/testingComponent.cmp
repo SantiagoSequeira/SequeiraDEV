@@ -1,0 +1,10 @@
+<aura:component >
+    <aura:attribute name="name" type="string" default="world"/>
+    <aura:attribute name="newName" type="string" default=""/>
+	<p>Hello {!v.name}!</p>
+    <form onsubmit="{!c.changeText}">
+    	<lightning:input type="text" name="newName" value="{!v.newName}"/>
+    	<lightning:button label="Submit" />
+    </form>
+    
+</aura:component>

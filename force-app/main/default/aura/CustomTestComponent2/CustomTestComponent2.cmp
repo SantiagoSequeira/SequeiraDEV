@@ -1,0 +1,7 @@
+<aura:component>
+    <lightning:card title="CustomTestComponent2">
+        <p class="slds-p-horizontal_small">
+            Soy el CustomTestComponent2
+        </p>
+    </lightning:card>
+</aura:component>

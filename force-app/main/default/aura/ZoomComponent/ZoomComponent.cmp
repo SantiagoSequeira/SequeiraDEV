@@ -1,0 +1,17 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <ltng:require 
+                  scripts="{!$Resource.zoomscript+ '/zoomScript.js'}"
+                  styles="{!$Resource.zoomscript+ '/style.css'}"/>
+    <div id="container">
+		<div style="overflow: hidden;display: inline-block;" id="main">
+			<div class="tooltip" style="width: 400px;height: 250px;overflow: hidden;" id="tooltip">
+			    <img src="http://sularome.github.io/Zoomple/images/zakopane/big/DSC_8488.jpg" class="image-thumb" style="width: 400px; height: 250px" id="mainimage"/>
+			    <span>
+			    	<div class="image-show" id="image-show" style="background-image: url('http://sularome.github.io/Zoomple/images/zakopane/big/DSC_8488.jpg');background-repeat: no-repeat;"></div>
+			    </span>
+			</div>
+		</div>
+	</div>
+	<button onclick="rotateImage(true)">Left</button>
+	<button onclick="rotateImage(false)">Right</button>
+</aura:component>

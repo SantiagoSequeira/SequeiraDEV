@@ -1,0 +1,3 @@
+<apex:page controller="DeferredDynamicComponentController" showHeader="false" renderAs="pdf">
+    <apex:dynamicComponent componentValue="{!dynamicForm}"/>
+</apex:page>

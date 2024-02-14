@@ -1,0 +1,29 @@
+<aura:component controller="XappiaSLAManagerAura" >
+    <aura:attribute name="processes" type="Object[]" required="true" />
+    <aura:attribute name="selectedProcess" type="type" default="" />
+    <aura:attribute name="items" type="Object[]" />
+    <aura:attribute name="generalFields" type="XappiaSLAManagerAura.FieldTypeInfo[]" />
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="SLA Process">SLA Process</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.processes}" var="p">
+                <tr class="slds-hint-parent">
+                    <td data-label="SLA Process Name" scope="row">
+                        <div class="slds-truncate" title="{!p.Name}">
+                            <a href="javascript:void(0);" tabindex="-1">
+                                <lightning:formattedText value="{!p.Name}" onclick="{!c.handleChange}" />
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component  implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome">
+    <aura:attribute name="isLoading" type="boolean" default="false" />
+    <aura:attribute name="channel" type="String" default="MAIN" />
+    <aura:handler event="c:SubPathRenderNewComponent" action="{!c.handleApplicationEvent}"/>
+    <div style="position:relative">
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner alternativeText="Loading" size="small" variant="base" />
+        </aura:if>
+        {!v.body}
+    </div>
+</aura:component>

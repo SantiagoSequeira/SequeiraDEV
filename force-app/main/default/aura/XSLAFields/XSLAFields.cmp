@@ -1,0 +1,38 @@
+<aura:component controller="XappiaSLAManagerAura">
+    <aura:attribute name="fields" type="XappiaSLAManagerAura.FieldTypeInfo[]" required="true"/>
+    <aura:attribute name="findedError" type="Object" />
+    <aura:attribute name="selectedProcess" type="String" required="true"/>
+    <aura:attribute name="set" type="Integer" required="true"/>
+    <aura:attribute name="itemsWithChanges" type="Integer[]" />
+    <aura:attribute name="hasChanges" type="Boolean" default="false" />
+    <aura:handler name="change" value="{!v.hasChanges}" action="{!c.handleChange}" />
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="tableHeader" scope="col">
+                    <div class="slds-truncate" title="Selected">Selected</div>
+                </th>
+                <th class="tableHeader" scope="col">
+                    <div class="slds-truncate" title="SLA Process">Fields to filter</div>
+                </th>
+                <th class="tableHeader" scope="col">
+                    <div class="slds-truncate" title="Field type">Field type</div>
+                </th>
+                <th class="tableHeader" scope="col">
+                    <div class="slds-truncate" title="Para campos de texto puedes separar opciones usando ';' (Punto y coma) (Ejemplo: opc1;opc2;opc3)">Filter</div>
+                </th>
+                <th class="tableHeader" scope="col">
+                    <div class="slds-truncate" title="Negation">Negation</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.fields}" var="p">
+                <c:SLAManagerFieldItem field="{!p}" findedError="{!v.findedError}" hasChanges="{!v.hasChanges}"/>
+            </aura:iteration>
+        </tbody>
+    </table>
+    <div class="submitButton">
+        <lightning:button label="Submit" onclick="{!c.handleSubmit}" variant="success" />
+    </div>
+</aura:component>

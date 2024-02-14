@@ -1,0 +1,5 @@
+<apex:component controller="DeferredDynamicComponentController">
+    <apex:variable var="title" value=""/>
+    <h1>Congratulations</h1>
+    This is your new Component
+</apex:component>

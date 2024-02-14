@@ -1,0 +1,12 @@
+.THIS .tableHeader {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+.THIS.submitButton {
+    position: sticky;
+    bottom: 20px;
+    float: right;
+    margin: 0 20px 0px 0;
+    font-size: 2em;
+}

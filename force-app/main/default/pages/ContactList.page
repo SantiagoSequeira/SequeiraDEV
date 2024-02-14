@@ -1,0 +1,19 @@
+<apex:page controller="messageToContacts">
+    <apex:pageBlock title="Add Message to Contacts">
+        <apex:form >
+            <apex:outputText >Message:</apex:outputText>
+            <apex:inputText label="message" id="message" value="{! message }" />
+            <apex:commandLink value="SUBMIT" action="{! save }" />
+        	<!-- Contacts List -->
+            <apex:pageBlockTable value="{! Contacts }" var="ac">
+                <apex:column >
+                    <apex:inputCheckbox value="{! ac.checked__c } " />
+                </apex:column>
+                <apex:column value="{! ac.LastName }"/>
+                <apex:column value="{! ac.FirstName }"/>
+                <apex:column value="{! ac.Message__c }"/>
+                <apex:column value="{! ac.character_id__c}"/>
+            </apex:pageBlockTable>
+         </apex:form>
+    </apex:pageBlock>  
+</apex:page>

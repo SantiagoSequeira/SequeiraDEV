@@ -1,0 +1,53 @@
+<apex:page controller="XappiaSLAManager" docType="html-5.0">
+    <apex:pageBlock title="SLA Processes" mode="edit" rendered="{!inFunction == 'None'}">
+        <apex:pageBlockTable value="{!slaProcesses}" var="p">
+            <apex:column headerValue="{!p.Name}">
+                <apex:form >
+                    <apex:outputLink value="/apex/XappiaSLAManager?process={!p.Name}" id="eventlink">{!p.name}</apex:outputLink>
+                </apex:form>
+            </apex:column>
+            
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <apex:pageBlock title="Campos" mode="edit" rendered="{!inFunction != 'None'}">
+        <apex:form >
+            <apex:pageBlockTable value="{!fieldsNamesForOrder}" var="fieldName">
+                <apex:column headerValue="Selected?">
+                    <apex:inputCheckbox value="{!fields[fieldName].selected}" />
+                </apex:column>
+                <apex:column headerValue="Field" value="{!fields[fieldName].fieldName}"/>
+                <apex:column headerValue="Type" value="{!fields[fieldName].fieldType}"/>
+                <apex:column headerValue="Filter">
+                    <apex:outputPanel rendered="{!fields[fieldName].fieldType != 'BOOLEAN' 
+                                                        && (fields[fieldName].fieldType == 'PICKLIST' 
+                                                                || fields[fieldName].fieldName == 'RecordTypeId')}">
+                        <div>
+                            <apex:selectCheckboxes value="{!fields[fieldName].selectedOptions}" title="Choose a country">
+                                <apex:selectOptions value="{!fields[fieldName].options}"/>
+                            </apex:selectCheckboxes>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!fields[fieldName].fieldType != 'BOOLEAN' 
+                                                        && (fields[fieldName].fieldType != 'PICKLIST' 
+                                                        && fields[fieldName].fieldName != 'RecordTypeId')}">
+                        <apex:input type="text" value="{!fields[fieldName].stringFilter}"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!fields[fieldName].fieldType == 'BOOLEAN'}">
+                        <apex:inputCheckbox value="{!fields[fieldName].checked}"/>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="Negar filtro">
+                    <apex:inputCheckbox value="{!fields[fieldName].isNot}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton action="{!generateJson}" value="Submit" oncomplete="displayData({!jsonGenerated})"/>
+        </apex:form>
+    </apex:pageBlock>
+    <apex:outputPanel id="asdr">
+        <script>
+            var displayData = function (data) {
+                console.log(data);
+            };
+        </script>
+    </apex:outputPanel>
+</apex:page>

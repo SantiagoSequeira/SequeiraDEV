@@ -1,0 +1,57 @@
+<aura:component  controller="SwapiController">
+    <aura:attribute name="character" type="Object"/>
+    <aura:attribute name="saving" type="boolean" default="false"/>
+	<div aria-labelledby="characterform">
+                <fieldset class="slds-box slds-theme--default slds-container--small">
+                <legend id="characterform" class="slds-text-heading--small 
+                  slds-p-vertical--medium">
+                  Personaje encontrado
+                </legend>
+                <form class="slds-form--stacked">
+                    <lightning:input type="number" aura:id="characterform" label="Numero de personaje"
+                                     name="character_id"
+                                     required="true"
+                                     disabled="true"
+                                     value="{!v.character.id}"/>
+                    <lightning:input type="string" aura:id="characterform" label="Nombre"
+                                     name="FirstName"
+                                     required="true"
+                                     value="{!v.character.name}"/>
+                    <lightning:input type="number" aura:id="characterform" label="Altura"
+                                     name="height"
+                                     required="true"
+                                     value="{!v.character.height}"/>
+                    <lightning:input type="string" aura:id="characterform" label="Genero"
+                                     name="gender"
+                                     required="true"
+                                     value="{!v.character.gender}"/>
+                    <lightning:input type="string" aura:id="characterform" label="Color de cabello"
+                                     name="haircolor"
+                                     required="true"
+                                     value="{!v.character.hair_color}"/>
+                    <lightning:input type="string" aura:id="characterform" label="Color de ojos"
+                                     name="eyecolor"
+                                     required="true"
+                                     value="{!v.character.eye_color}"/>
+                    <lightning:input type="string" aura:id="characterform" label="URL"
+                                     name="url"
+                                     required="true"
+                                     value="{!v.character.url}"/>
+                    <lightning:input type="string" aura:id="characterform" label="Planeta"
+                                     name="world"
+                                     required="true"
+                                     value="{!v.character.homeworld}"/>
+                    <div class="save-button">
+                    	<lightning:button label="Guardar"
+                                      class="slds-m-top--medium"
+                                      variant="success"
+                                      onclick="{!c.contactSave}"/>
+                        <aura:if isTrue="{!v.saving}" >
+                        	<lightning:spinner alternativeText="Loading" size="small" />
+                        </aura:if>
+                    </div>
+                    
+                </form>
+              </fieldset>    
+            </div>
+</aura:component>

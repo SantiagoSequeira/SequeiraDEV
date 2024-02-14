@@ -1,0 +1,5 @@
+<design:component >
+    <design:attribute name="channel" default="MAIN" label="Canal de comunicacion"/>
+    <design:attribute name="subPathWiredMode" default="true" label="Modo subpath interno"/>
+    <design:attribute name="hideUpdateButton" default="false" label="Ocultar boton de update"/>
+</design:component>

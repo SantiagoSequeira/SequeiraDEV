@@ -1,0 +1,52 @@
+<aura:component>
+    <aura:attribute name="field" type="XappiaSLAManagerAura.FieldTypeInfo" required="true"/>
+    <aura:attribute name="options" type="Object"/>
+    <aura:attribute name="findedError" type="Object" />
+    <aura:attribute name="showError" type="Boolean" default="false" />
+    <aura:handler name="change" value="{!v.findedError}" action="{!c.checkErrors}"/>
+    <aura:attribute name="hasChanges" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <tr class="slds-hint-parent">
+        <td>
+            <lightning:input type="checkbox-button" label="" name="" checked="{!v.field.selected}" onchange="{!c.handleChange}"/>
+        </td>
+        <td data-label="SLA Process Name" scope="row">
+            <div class="slds-truncate" title="{!v.field.fieldName}">
+                <a href="javascript:void(0);" tabindex="-1">
+                    <lightning:formattedText value="{!v.field.fieldName}" />
+                </a>
+            </div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.field.fieldType}">
+                <lightning:formattedText value="{!v.field.fieldType}" />
+            </div>
+        </td>
+        <td>
+            <aura:if isTrue="{! and(notequals(v.field.fielType, 'BOOLEAN'), or(equals(v.field.fieldType, 'PICKLIST'), equals(v.field.fieldName, 'RecordTypeId')) )}" >
+                
+                <lightning:checkboxGroup name=""
+                        label=""
+                        options="{! v.options }"
+                        value="{! v.field.selectedOptions }"
+                        disabled="{! v.field.selected == false }"
+                        aura:id="thisField"/>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{! and(notequals(v.field.fieldType, 'BOOLEAN'), notequals(v.field.fieldType, 'PICKLIST'), notequals(v.field.fieldName, 'RecordTypeId') )}">
+                        <lightning:input type="text" label="" aura:id="thisField" name="" value="{!v.field.stringFilter}" disabled="{! v.field.selected == false}"/>
+                        <aura:set attribute="else">
+                            <lightning:input type="checkbox" aura:id="thisField" label="" name="" checked="{!v.field.checked}" disabled="{! v.field.selected == false}"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+            <aura:if isTrue="{!v.showError}">
+                {!v.findedError.message}
+            </aura:if>
+        </td>
+        <td>
+            <lightning:input type="checkbox" label="" name="" checked="{!v.field.isNot}" disabled="{! v.field.selected == false}"/>
+        </td>
+    </tr>
+</aura:component>

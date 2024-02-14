@@ -1,0 +1,45 @@
+.title {
+    color: red;
+}
+.container {
+    color:red;
+    max-width:100px;
+    display:flex;
+}
+.logo{
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    left: 0;
+    top: 0;
+    float: left;
+    position: absolute;
+}
+.in-middle {
+    color:blue;
+}
+.section-personalInformation{
+    height: 52em;
+}
+.column{
+    display: inline-block;
+    float: left;
+    height: 100%;
+    width: 50%;
+    border-bottom: solid 2px rgb(243, 242, 242);
+}
+.row {
+    width: 100%;
+    margin-bottom: 1em; 
+    display:flex;
+    margin-left: 25%;
+}
+.column span{
+    display: inline-block;
+    width: 80%;
+    height: 100%;
+    margin: .3em;
+}
+.title {
+    color:red;
+}

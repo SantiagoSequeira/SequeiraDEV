@@ -1,0 +1,49 @@
+<aura:component>
+    <aura:attribute name="contacts" type="Object[]" default="[{
+            Id: 1,
+            Name: 'Amy Taylor',
+            Title: 'VP of Engineering',
+            AssignedTo: 'F0.F1.F2'
+        },
+        {
+            Id: 2,
+            Name: 'Michael Jones',
+            Title: 'VP of Sales',
+            AssignedTo: 'F3.F4.F5'
+        },
+        {
+            Id: 3,
+            Name: 'Jennifer Wu',
+            Title: 'CEO',
+            AssignedTo: 'F6.F7.F8'
+        }]"/>
+	<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+                    <div class="slds-truncate" title="Cuenta">Cuenta</div>
+                    </th>
+                    <th class="" scope="col">
+                    <div class="slds-truncate" title="AsignadoA">Asignado a</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{! v.contacts}" var="contact">
+                    <tr  class="slds-hint-parent">
+                        <th scope="row">
+                            <div class="slds-truncate">
+                                <lightning:formattedtext value="{!contact.Name}"></lightning:formattedtext> 
+                            </div>
+                        </th>
+                        <th scope="row">
+                            <div class="slds-truncate">
+                                <lightning:input type="text" label="" value="{!contact.AssignedTo}" style="margin-top:-15px"/>
+                            </div>
+                        </th>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+        <lightning:button variant="brand" label="Save" title="Save" />
+</aura:component>

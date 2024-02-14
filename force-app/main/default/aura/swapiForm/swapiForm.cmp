@@ -1,0 +1,47 @@
+<aura:component controller="SwapiController" implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name="id" type="integer" default="1"/>
+    <aura:attribute name="character" type="Object"/>
+    <aura:attribute name="finded" type="boolean" default="false"/>
+    <aura:attribute name="dontFinded" type="boolean" default="false"/>
+    <aura:attribute name="searching" type="boolean" default="false"/>
+    <lightning:layout class="slds-page-header slds-page-header--object-home">
+        <lightning:layoutItem padding="around-small" size="3">
+        	<div aria-labelledby="swapiform">
+            	<fieldset class="slds-box slds-theme--default slds-container--small">
+                    <legend id="swapiform" class="slds-text-heading--small 
+                      slds-p-vertical--medium">
+                      Buscar personaje
+                    </legend>
+                    <form class="slds-form--stacked" onsubmit="{!c.clickSearch}">          
+                        <lightning:input type="number" aura:id="id" label="ID"
+                                         name="id"
+                                         step="1"
+                                         min="1"
+                                         max="88"
+                                         value="{!v.id}"/>
+
+                        <lightning:button label="Buscar"
+                                          class="slds-m-top--medium"
+                                          variant="brand"
+                                          onclick="{!c.clickSearch}"/>
+                    </form>
+              	</fieldset>    
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="9">
+            <aura:if isTrue="{!v.searching}">
+                <lightning:spinner alternativeText="Loading" />
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.finded}">
+                        <c.characterForm character="{!v.character}"/>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.dontFinded}">
+                                No hemos encontrado ningun registro con ese id de personaje!
+                            </aura:if>
+                        </aura:set>
+                    </aura:if> 
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+    </lightning:layout>   
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component controller="XappiaSLAManagerAura" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="processes" type="Object[]"/>
+    <aura:attribute name="generalFields" type="XappiaSLAManagerAura.FieldTypeInfo[]" />
+    <aura:attribute name="items" type="Object[]" />
+    <aura:attribute name="selectedProcess" type="String" default="NONE" />
+    <aura:attribute name="itemsWithChanges" type="Integer[]" default="[]" />
+    <aura:attribute name="findedError" type="Object" default="{'field': '', 'message': ''}" />
+    <aura:if isTrue="{!v.selectedProcess == 'NONE'}">
+        <c:XSLAProcess processes="{!v.processes}" items="{!v.items}" selectedProcess="{!v.selectedProcess}" generalFields="{!v.generalFields}"/>
+        <aura:set attribute="else">
+            <lightning:tabset variant="scoped" onselect="{! c.handleSelect }" aura:id="tabs">
+                <aura:iteration items="{!v.items}" var="item">
+                    <lightning:tab label="{!'Set ' + item.num}" id="{!'T' + item.num}">
+                        <c:XSLAFields fields="{!item.fields}" selectedProcess="{!v.selectedProcess}" set="{!item.num}" itemsWithChanges="{!v.itemsWithChanges}"/>
+                    </lightning:tab>
+                </aura:iteration>
+                <lightning:tab label="+" id="ADD"></lightning:tab>
+            </lightning:tabset>
+        </aura:set>
+    </aura:if>
+</aura:component>

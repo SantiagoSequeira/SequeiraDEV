@@ -1,0 +1,58 @@
+h2{
+    background: rgb(243, 242, 242);
+    text-indent: .5em;
+    font-family: 'Lucida Console';
+    font-weight: 400;
+}
+
+.column{
+    display: inline-block;
+    float: left;
+    height: 100%;
+    width: 50%;
+    border-bottom: solid 2px rgb(243, 242, 242);
+}
+
+.column span{
+    display: inline-block;
+    width: 80%;
+    height: 100%;
+    margin: .3em;
+}
+
+.logo{
+    width: 5em;
+    height: 5em;
+    margin: 0;
+    left: 0;
+    top: 0;
+    float: left;
+    position: absolute;
+}
+
+h1{
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 4em;                    
+}
+
+.row{
+    width: 100%;
+    margin-bottom: 1em; 
+}
+
+.unique-column{
+    width: 100%;
+}
+
+.section-personalInformation{
+    height: 52em;
+}
+
+.section-direction{
+    height: 20em;
+}
+
+.section{
+    height: 17em;
+}

@@ -1,0 +1,50 @@
+<aura:component controller="ImageController"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="image" type="string" default="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
+    <aura:attribute name="isModalOpen" type="Boolean" default="false"/>
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+
+    <lightning:card title="Capture Screen">
+        <lightning:layout horizontalAlign="spread">
+            <lightning:layoutItem padding="around-small">
+                <div class="camera">
+                    <video id="video">Video stream not available.</video>
+                    <button id="startbutton" onclick="{!c.doInit}">
+                        <lightning:icon iconName="utility:photo"/>
+                    </button>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small">
+                <canvas id="canvas">
+                </canvas>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick="{! c.handleClose }" disabled="{!v.isLoading}">
+                    <lightning:icon iconName="utility:close" />
+
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Imagen</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium slds-is-relative" id="modal-content-id-1">
+                    <aura:if isTrue="{!v.isLoading}">
+                        <lightning:spinner alternativeText="alternativeText" size="small" variant="base" />
+                    </aura:if>
+                    <div class="output slds-align_absolute-center">
+                        <img id="photo"  src="{!v.image}" alt="The screen capture will appear in this box."/>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <lightning:button variant="success" label="Guardar foto" title="Guardar foto" onclick="{!c.savePhoto}" disabled="{!v.isLoading}"/>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </aura:if>
+    
+</aura:component>

@@ -1,0 +1,7 @@
+.btn {
+    margin: 5px 5px 0 0;
+}
+.flex-box{
+    display: flex;
+    flex-wrap: wrap;
+}

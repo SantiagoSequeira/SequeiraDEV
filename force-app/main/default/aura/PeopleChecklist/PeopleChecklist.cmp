@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="PeopleChecklist">
+    <aura:attribute name="persons" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+    <lightning:card class="carousel-card" title="People checklist">
+    	<div class="options slds-text-heading_large">
+        	<lightning:checkboxGroup name="People"
+                                 options="{! v.persons }"
+                                 value=""/>
+        </div>
+        
+    </lightning:card>
+</aura:component>

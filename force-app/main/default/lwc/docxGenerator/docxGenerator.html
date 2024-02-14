@@ -1,0 +1,40 @@
+<template>
+    <lightning-card>
+        <div class="centered">
+            <div class="text-input-container">
+                <lightning-input-rich-text
+                    data-id="Main_Template"
+                    value={data}
+                    custom-buttons={customButtons}
+                    disabled-categories="INSERT_CONTENT,FORMAT_FONT" formats={formats}>
+                    <lightning-rich-text-toolbar-button-group slot="toolbar" aria-label="First group">
+                        <lightning-rich-text-toolbar-button
+                            icon-name="utility:brush"
+                            icon-alternative-text="Resaltar texto"
+                            onclick={handleMarkText}>
+                        </lightning-rich-text-toolbar-button>
+                        <lightning-rich-text-toolbar-button
+                            if:true={isEditMode}
+                            icon-name="utility:insert_template"
+                            icon-alternative-text="Insertar campo"
+                            onclick={handleInsertField}>
+                        </lightning-rich-text-toolbar-button>
+                    </lightning-rich-text-toolbar-button-group>
+                </lightning-input-rich-text>
+            </div>
+            <div class="slds-clearfix" style="width: 70%; margin-top: 5px">
+                <div class="slds-float_right">
+                    <lightning-button
+                        variant="brand"
+                        label={labelButton}
+                        onclick={handleClick}>
+                    </lightning-button>
+                </div>
+              </div>
+        </div>
+
+        
+    </lightning-card>
+
+    <c-docx-generator-field-insert if:true={isOpenModal} onclose={handleCloseModal}></c-docx-generator-field-insert>
+</template>

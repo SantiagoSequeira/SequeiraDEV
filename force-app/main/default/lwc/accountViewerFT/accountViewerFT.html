@@ -1,0 +1,16 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+    <template if:false={isLoading}>
+        <template if:true={hasError}>
+            Por un demonio, lo que faltaba!
+        </template>
+        <template if:false={hasError}>
+            <lightning-card  title="Details">
+                <lightning-input type="text" name="input1" label="User ID:" value={data.userId} disabled></lightning-input>
+            </lightning-card>
+        </template>
+        
+    </template>
+</template>

@@ -1,0 +1,15 @@
+.item {
+    width: 97%;
+    margin: 10px 15px;
+    background: #1ade86;
+    padding: 15px 0px 15px 15px;
+    max-height: 50px;
+    cursor: pointer;
+    user-select: none;
+    transition:all 1s;
+    overflow: hidden;
+}
+.expanded-item {
+    max-height: unset;
+    background: #b4f3d7;
+}

@@ -1,0 +1,24 @@
+<aura:component controller="FileController" implements="force:hasRecordId,flexipage:availableForAllPageTypes">
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg']" />
+    <aura:attribute name="multiple" type="Boolean" default="true" />
+    <aura:attribute name="disabled" type="Boolean" default="true" />
+    <aura:attribute name="recordId" type="String" />
+    <lightning:card>
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner alternativeText="alternativeText" size="small" variant="base" />
+        </aura:if>
+        <lightning:fileUpload label="Foto de perfil"
+            name="fileUploader"
+            multiple="false"
+            accept="{!v.filetype}"
+            recordId="{!v.recordId}"
+            onuploadfinished="{!c.handleUploadFinishedA}" />
+        <lightning:fileUpload label="Foto de metaverso"
+            name="fileUploader"
+            multiple="false"
+            accept="{!v.filetype}"
+            recordId="{!v.recordId}"
+            onuploadfinished="{!c.handleUploadFinishedB}" />
+    </lightning:card>
+</aura:component>
