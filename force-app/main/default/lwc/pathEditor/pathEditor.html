@@ -1,0 +1,87 @@
+<template>
+    <lightning-textarea name="input1" label="Enter some text" value={stepsText} ></lightning-textarea>
+    <lightning-button variant="brand" label="Exportar" title="Exportar" onclick={exportData} class="slds-m-left_x-small"></lightning-button>
+    <lightning-button variant="brand" label="Importar" title="Importar" onclick={importData} class="slds-m-left_x-small"></lightning-button>
+    <div style="overflow-x: scroll;">
+        <lightning-progress-indicator current-step="NO-ONE_" type="path" variant="base">
+            <template for:each={steps} for:item="step">
+                <lightning-progress-step label={step.label} value={step.value} key={step.label} onstepfocus={focus}></lightning-progress-step>
+            </template>
+            <lightning-progress-step label="Agregar nuevo paso" value="addNewStep" onclick={addNew}></lightning-progress-step>
+        </lightning-progress-indicator>
+    </div>
+    <template lwc:if={selectedStep}>
+        <lightning-input type="text" label="Etiqueta" value={selectedStep.label} data-field="label" onchange={setField} field-level-help="Etiqueta visible en el sub estado."></lightning-input>
+        <lightning-combobox
+            name="status"
+            label="Estado"
+            value={selectedStep.estado}
+            placeholder="Seleccionar estado"
+            options={estados}
+            onchange={setField}
+            data-field="estado">
+        </lightning-combobox>
+        <lightning-combobox
+            name="subEstado"
+            label="Sub-Estado"
+            value={selectedStep.subEstado}
+            placeholder="Seleccionar sub-estado"
+            options={subEstados}
+            onchange={setField}
+            data-field="subEstado">
+        </lightning-combobox>
+        <lightning-dual-listbox
+            name="permiso"
+            label="Permiso requerido"
+            value={selectedStep.permiso}
+            source-label="Disponibles"
+            selected-label="Seleccionados"
+            field-level-help="Seleccionar permiso requerido para avanzar"
+            options={permisos}
+            onchange={setSelected}
+            data-field="permiso">
+        </lightning-dual-listbox>
+        <lightning-combobox
+            name="reasignarA"
+            label="Reasignar"
+            value={selectedStep.reasignar}
+            placeholder="Seleccionar a quien se reasigna"
+            options={reasignarA}
+            onchange={setField}
+            data-field="reasignar">
+        </lightning-combobox>
+        <lightning-input type="checkbox" label="Es reparo" name="input2" checked={selectedStep.reparo} data-field="reparo" onchange={setCheck}></lightning-input>
+        <lightning-input type="checkbox" label="Requiere aprobacion" name="input2" checked={selectedStep.approvalProcess} data-field="approvalProcess" onchange={setCheck}></lightning-input>
+        <template lwc:if={selectedStep.approvalProcess}>
+            <lightning-combobox
+                name="status"
+                label="Estado al reparar"
+                value={selectedStep.estado}
+                placeholder="Seleccionar estado"
+                options={estados}
+                onchange={setField}
+                data-field="estado">
+            </lightning-combobox>
+            <lightning-combobox
+                name="subEstado"
+                label="Sub-Estado al reparar"
+                value={selectedStep.subEstadoR}
+                placeholder="Seleccionar sub-estado"
+                options={subEstados}
+                onchange={setField}
+                data-field="subEstadoR">
+            </lightning-combobox>
+            <lightning-combobox
+                name="reasignarA"
+                label="Reasignar al reparar"
+                value={selectedStep.reasignarR}
+                placeholder="Seleccionar a quien se reasigna al reparar"
+                options={reasignarA}
+                onchange={setField}
+                data-field="reasignarR">
+            </lightning-combobox>
+        </template>
+        <lightning-button variant="success" label="Guardar" title="Guardar" onclick={save} class="slds-m-left_x-small"></lightning-button>
+        <lightning-button variant="destructive" label="Borrar" title="Borrar" onclick={del} class="slds-m-left_x-small"></lightning-button>
+    </template>
+</template>
