@@ -45,14 +45,35 @@
                     </div>
                     <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
                         <lightning-input
-                            data-validate="true"
-                            data-field="Permission_Requests__c"
-                            type="number"
-                            min="0"
-                            label="Nro de solicitudes de permisos"
-                            value={form.Permission_Requests__c}
+                            data-field="Branch_Name__c"
+                            label="Nombre de la branch"
+                            value={form.Branch_Name__c}
                             onchange={handleFieldChange}
                         ></lightning-input>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-grid slds-grid_vertical-align-end slds-gutters_x-small">
+                            <div class="slds-col">
+                                <lightning-textarea
+                                    data-field="Permission_Requests__c"
+                                    label="Nros de solicitudes de permisos (separados por espacios)"
+                                    value={form.Permission_Requests__c}
+                                    onchange={handleFieldChange}
+                                ></lightning-textarea>
+                            </div>
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button-icon
+                                    icon-name="utility:copy_to_clipboard"
+                                    alternative-text="Copiar solicitudes de permisos"
+                                    title="Copiar solicitudes de permisos"
+                                    data-field="Permission_Requests__c"
+                                    onclick={handleCopy}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -177,6 +198,7 @@
                             <tr class="slds-line-height_reset">
                                 <th scope="col">Nro HU</th>
                                 <th scope="col">Estado</th>
+                                <th scope="col">Branch</th>
                                 <th scope="col">Solicitudes</th>
                                 <th scope="col">Checks</th>
                                 <th scope="col">Acciones</th>
@@ -187,6 +209,7 @@
                                 <tr key={hu.Id}>
                                     <td>{hu.HU_Number__c}</td>
                                     <td>{hu.HU_Status__c}</td>
+                                    <td>{hu.Branch_Name__c}</td>
                                     <td>{hu.Permission_Requests__c}</td>
                                     <td>{hu.checksSummary}</td>
                                     <td>

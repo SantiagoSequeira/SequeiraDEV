@@ -26,9 +26,10 @@ const DEFAULT_FORM = {
     Id: null,
     HU_Number__c: '',
     Package_Path__c: '',
+    Branch_Name__c: '',
     Test_Text__c: '',
     HU_Status__c: 'Nuevo',
-    Permission_Requests__c: 0,
+    Permission_Requests__c: '',
     Has_Data__c: false,
     Has_Permissions__c: false,
     Has_Permission_Groups__c: false,
@@ -133,12 +134,11 @@ export default class HuManager extends LightningElement {
                 Id: record.Id,
                 HU_Number__c: record.HU_Number__c || '',
                 Package_Path__c: record.Package_Path__c || '',
+                Branch_Name__c: record.Branch_Name__c || '',
                 Test_Text__c: record.Test_Text__c || '',
                 HU_Status__c: record.HU_Status__c || 'Nuevo',
                 Permission_Requests__c:
-                    record.Permission_Requests__c != null
-                        ? record.Permission_Requests__c
-                        : 0,
+                    record.Permission_Requests__c || '',
                 Has_Data__c: !!record.Has_Data__c,
                 Has_Permissions__c: !!record.Has_Permissions__c,
                 Has_Permission_Groups__c: !!record.Has_Permission_Groups__c,

@@ -18,6 +18,11 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
+        <field>HU__c.Branch_Name__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
         <field>HU__c.Test_Text__c</field>
         <readable>true</readable>
         <editable>true</editable>
