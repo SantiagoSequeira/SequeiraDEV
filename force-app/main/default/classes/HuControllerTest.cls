@@ -5,9 +5,10 @@ private class HuControllerTest {
         HU__c hu = new HU__c(
             HU_Number__c = 'HU-1001',
             Package_Path__c = '/packages/hu1001/package.xml',
+            Branch_Name__c = 'feature/hu-1001',
             Test_Text__c = 'TestClassOne TestClassTwo',
             HU_Status__c = 'Nuevo',
-            Permission_Requests__c = 2,
+            Permission_Requests__c = '1234 5678',
             Has_Data__c = true
         );
 
@@ -25,14 +26,14 @@ private class HuControllerTest {
         insert hu;
 
         hu.HU_Status__c = 'En desarrollo';
-        hu.Permission_Requests__c = 5;
+        hu.Permission_Requests__c = '5555';
 
         Test.startTest();
         HU__c updated = HuController.saveHU(hu);
         Test.stopTest();
 
         System.assertEquals('En desarrollo', updated.HU_Status__c);
-        System.assertEquals(5, updated.Permission_Requests__c);
+        System.assertEquals('5555', updated.Permission_Requests__c);
     }
 
     @isTest
@@ -50,11 +51,11 @@ private class HuControllerTest {
     }
 
     @isTest
-    static void testSaveHUWithNegativePermissionRequestsThrows() {
+    static void testSaveHUWithInvalidPermissionRequestsThrows() {
         HU__c hu = new HU__c(
             HU_Number__c = 'HU-3003',
             HU_Status__c = 'Nuevo',
-            Permission_Requests__c = -1
+            Permission_Requests__c = 'ABC not-a-number'
         );
 
         Boolean threw = false;
@@ -64,7 +65,7 @@ private class HuControllerTest {
             threw = true;
         }
 
-        System.assert(threw, 'Expected an AuraHandledException for negative permission requests.');
+        System.assert(threw, 'Expected an AuraHandledException for invalid permission requests format.');
     }
 
     @isTest

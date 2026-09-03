@@ -8,6 +8,7 @@ public with sharing class HuController {
         'Name',
         'HU_Number__c',
         'Package_Path__c',
+        'Branch_Name__c',
         'Test_Text__c',
         'HU_Status__c',
         'Permission_Requests__c',
@@ -91,9 +92,12 @@ public with sharing class HuController {
             throw new AuraHandledException('El Nro de HU es obligatorio.');
         }
 
-        if (hu.Permission_Requests__c != null && hu.Permission_Requests__c < 0) {
+        if (
+            String.isNotBlank(hu.Permission_Requests__c) &&
+            !Pattern.matches('^\\d+(\\s+\\d+)*$', hu.Permission_Requests__c.trim())
+        ) {
             throw new AuraHandledException(
-                'El número de solicitudes para permisos no puede ser negativo.'
+                'Los números de solicitudes de permisos deben ser números separados por espacios.'
             );
         }
     }
