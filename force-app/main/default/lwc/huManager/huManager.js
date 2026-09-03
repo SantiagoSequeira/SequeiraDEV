@@ -46,6 +46,7 @@ export default class HuManager extends LightningElement {
     checkFields = CHECK_FIELDS;
 
     form = { ...DEFAULT_FORM };
+    originalForm = { ...DEFAULT_FORM };
     searchTerm = '';
     isSaving = false;
     wiredHUsResult;
@@ -77,6 +78,16 @@ export default class HuManager extends LightningElement {
 
     get saveButtonLabel() {
         return this.isEditing ? 'Actualizar HU' : 'Guardar HU';
+    }
+
+    get hasChanges() {
+        return (
+            JSON.stringify(this.form) !== JSON.stringify(this.originalForm)
+        );
+    }
+
+    get isSaveDisabled() {
+        return this.isSaving || (this.isEditing && !this.hasChanges);
     }
 
     get hasResults() {
@@ -124,6 +135,7 @@ export default class HuManager extends LightningElement {
 
     handleNew() {
         this.form = { ...DEFAULT_FORM };
+        this.originalForm = { ...DEFAULT_FORM };
     }
 
     handleEdit(event) {
@@ -147,6 +159,7 @@ export default class HuManager extends LightningElement {
                 Notes__c: record.Notes__c || '',
                 External_Reference__c: record.External_Reference__c || ''
             };
+            this.originalForm = { ...this.form };
         }
     }
 

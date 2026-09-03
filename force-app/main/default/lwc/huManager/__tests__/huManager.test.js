@@ -110,4 +110,34 @@ describe('c-hu-manager', () => {
 
         expect(saveHU).not.toHaveBeenCalled();
     });
+
+    it('disables the update button until the form is changed while editing', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit(mockHUs);
+        await flushPromises();
+
+        const editButton = element.shadowRoot.querySelector(
+            'lightning-button-icon[title="Editar"]'
+        );
+        editButton.click();
+        await flushPromises();
+
+        const getUpdateButton = () =>
+            [...element.shadowRoot.querySelectorAll('lightning-button')].find(
+                (button) => button.label === 'Actualizar HU'
+            );
+
+        expect(getUpdateButton().disabled).toBe(true);
+
+        const branchInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="Branch_Name__c"]'
+        );
+        branchInput.value = 'feature/hu-1001-updated';
+        branchInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getUpdateButton().disabled).toBe(false);
+    });
 });
