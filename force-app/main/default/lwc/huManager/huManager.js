@@ -46,9 +46,9 @@ export default class HuManager extends LightningElement {
     checkFields = CHECK_FIELDS;
 
     form = { ...DEFAULT_FORM };
-    originalForm = { ...DEFAULT_FORM };
     searchTerm = '';
     isSaving = false;
+    isFormDirty = false;
     wiredHUsResult;
     hus = [];
 
@@ -80,14 +80,8 @@ export default class HuManager extends LightningElement {
         return this.isEditing ? 'Actualizar HU' : 'Guardar HU';
     }
 
-    get hasChanges() {
-        return (
-            JSON.stringify(this.form) !== JSON.stringify(this.originalForm)
-        );
-    }
-
     get isSaveDisabled() {
-        return this.isSaving || (this.isEditing && !this.hasChanges);
+        return this.isSaving || (this.isEditing && !this.isFormDirty);
     }
 
     get hasResults() {
@@ -119,6 +113,7 @@ export default class HuManager extends LightningElement {
             return;
         }
         this.form = { ...this.form, [field]: event.target.value };
+        this.isFormDirty = true;
     }
 
     handleCheckChange(event) {
@@ -127,6 +122,7 @@ export default class HuManager extends LightningElement {
             return;
         }
         this.form = { ...this.form, [field]: event.target.checked };
+        this.isFormDirty = true;
     }
 
     handleSearchChange(event) {
@@ -135,7 +131,7 @@ export default class HuManager extends LightningElement {
 
     handleNew() {
         this.form = { ...DEFAULT_FORM };
-        this.originalForm = { ...DEFAULT_FORM };
+        this.isFormDirty = false;
     }
 
     handleEdit(event) {
@@ -159,7 +155,7 @@ export default class HuManager extends LightningElement {
                 Notes__c: record.Notes__c || '',
                 External_Reference__c: record.External_Reference__c || ''
             };
-            this.originalForm = { ...this.form };
+            this.isFormDirty = false;
         }
     }
 
