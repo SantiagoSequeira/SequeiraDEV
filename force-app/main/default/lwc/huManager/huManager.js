@@ -77,6 +77,7 @@ export default class HuManager extends LightningElement {
     checkFields = CHECK_FIELDS;
 
     form = { ...DEFAULT_FORM };
+    initialForm = { ...DEFAULT_FORM };
     permissionRequestForm = { ...DEFAULT_PERMISSION_REQUEST };
     searchTerm = '';
     isSaving = false;
@@ -110,6 +111,19 @@ export default class HuManager extends LightningElement {
 
     get saveButtonLabel() {
         return this.isEditing ? 'Actualizar HU' : 'Guardar HU';
+    }
+
+    get hasFormChanges() {
+        const keys = Object.keys(DEFAULT_FORM);
+        return keys.some((key) => {
+            const currentValue = this.form[key] ?? '';
+            const initialValue = this.initialForm[key] ?? '';
+            return currentValue !== initialValue;
+        });
+    }
+
+    get isSaveDisabled() {
+        return this.isSaving || !this.hasFormChanges;
     }
 
     get hasResults() {
@@ -334,35 +348,41 @@ export default class HuManager extends LightningElement {
 
     handleNew() {
         this.form = { ...DEFAULT_FORM };
+        this.initialForm = { ...DEFAULT_FORM };
         this.permissionRequests = [];
         this.handleNewPermissionRequest();
+    }
+
+    mapRecordToForm(record) {
+        return {
+            Id: record ? record.Id || null : null,
+            HU_Number__c: (record && record.HU_Number__c) || '',
+            Name__c: (record && record.Name__c) || '',
+            Branch__c: (record && record.Branch__c) || '',
+            Package_Path__c: (record && record.Package_Path__c) || '',
+            Test_Text__c: (record && record.Test_Text__c) || '',
+            HU_Status__c: (record && record.HU_Status__c) || 'Nuevo',
+            Has_Data__c: !!(record && record.Has_Data__c),
+            Has_Permissions__c: !!(record && record.Has_Permissions__c),
+            Has_Permission_Groups__c: !!(record && record.Has_Permission_Groups__c),
+            Has_AFA_Approval__c: !!(record && record.Has_AFA_Approval__c),
+            Has_Test_Plans__c: !!(record && record.Has_Test_Plans__c),
+            Solo_DevOps__c: !!(record && record.Solo_DevOps__c),
+            Guide_Sent__c: !!(record && record.Guide_Sent__c),
+            Is_Multiple_Production__c: !!(record && record.Is_Multiple_Production__c),
+            Multiple_Production_HU_Numbers__c:
+                (record && record.Multiple_Production_HU_Numbers__c) || '',
+            Notes__c: (record && record.Notes__c) || '',
+            External_Reference__c: (record && record.External_Reference__c) || ''
+        };
     }
 
     handleEdit(event) {
         const { id } = event.currentTarget.dataset;
         const record = this.hus.find((hu) => hu.Id === id);
         if (record) {
-            this.form = {
-                Id: record.Id,
-                HU_Number__c: record.HU_Number__c || '',
-                Name__c: record.Name__c || '',
-                Branch__c: record.Branch__c || '',
-                Package_Path__c: record.Package_Path__c || '',
-                Test_Text__c: record.Test_Text__c || '',
-                HU_Status__c: record.HU_Status__c || 'Nuevo',
-                Has_Data__c: !!record.Has_Data__c,
-                Has_Permissions__c: !!record.Has_Permissions__c,
-                Has_Permission_Groups__c: !!record.Has_Permission_Groups__c,
-                Has_AFA_Approval__c: !!record.Has_AFA_Approval__c,
-                Has_Test_Plans__c: !!record.Has_Test_Plans__c,
-                Solo_DevOps__c: !!record.Solo_DevOps__c,
-                Guide_Sent__c: !!record.Guide_Sent__c,
-                Is_Multiple_Production__c: !!record.Is_Multiple_Production__c,
-                Multiple_Production_HU_Numbers__c:
-                    record.Multiple_Production_HU_Numbers__c || '',
-                Notes__c: record.Notes__c || '',
-                External_Reference__c: record.External_Reference__c || ''
-            };
+            this.form = this.mapRecordToForm(record);
+            this.initialForm = { ...this.form };
             this.handleNewPermissionRequest();
             this.loadPermissionRequests();
         }
@@ -407,6 +427,9 @@ export default class HuManager extends LightningElement {
     }
 
     async handleSave() {
+        if (this.isSaveDisabled) {
+            return;
+        }
         if (!this.validateForm()) {
             this.notifyError(
                 'Revisá los campos del formulario.',
@@ -423,7 +446,8 @@ export default class HuManager extends LightningElement {
             }
             const savedHu = await saveHU({ hu: recordToSave });
             this.notifySuccess('HU guardada correctamente.');
-            this.form = { ...DEFAULT_FORM, ...savedHu };
+            this.form = this.mapRecordToForm(savedHu);
+            this.initialForm = { ...this.form };
             this.handleNewPermissionRequest();
             await refreshApex(this.wiredHUsResult);
             await this.loadPermissionRequests();
@@ -462,7 +486,8 @@ export default class HuManager extends LightningElement {
         }
 
         try {
-            this.permissionRequests = await getPermissionRequests({ huId: this.form.Id });
+            const result = await getPermissionRequests({ huId: this.form.Id });
+            this.permissionRequests = Array.isArray(result) ? result : [];
         } catch (error) {
             this.permissionRequests = [];
             this.notifyError('No se pudieron cargar las solicitudes.', error);
@@ -533,11 +558,11 @@ export default class HuManager extends LightningElement {
                     ...this.permissionRequests
                 ];
             } else {
-                this.permissionRequests = this.permissionRequests.map((request) =>
-                    request.Id === savedPermissionRequest.Id
+                this.permissionRequests = this.permissionRequests.map((request) => {
+                    return request.Id === savedPermissionRequest.Id
                         ? savedPermissionRequest
-                        : request
-                );
+                        : request;
+                });
             }
             this.notifySuccess('Solicitud guardada correctamente.');
             this.handleNewPermissionRequest();

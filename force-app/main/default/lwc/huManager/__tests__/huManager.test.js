@@ -31,7 +31,7 @@ jest.mock(
     '@salesforce/apex/HuController.getPermissionRequests',
     () => {
         return {
-            default: jest.fn()
+            default: jest.fn().mockResolvedValue([])
         };
     },
     { virtual: true }
@@ -87,7 +87,7 @@ const mockHUs = [
 ];
 
 function flushPromises() {
-    return new Promise((resolve) => setTimeout(resolve, 0));
+    return Promise.resolve();
 }
 
 describe('c-hu-manager', () => {
@@ -159,5 +159,152 @@ describe('c-hu-manager', () => {
         await flushPromises();
 
         expect(saveHU).not.toHaveBeenCalled();
+    });
+
+    it('disables save button when there are no changes on a new form and enables it upon field change', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit([]);
+        await flushPromises();
+
+        const getSaveButton = () =>
+            [
+                ...element.shadowRoot.querySelectorAll('lightning-button')
+            ].find((button) => button.label === 'Guardar HU');
+
+        expect(getSaveButton().disabled).toBe(true);
+
+        const huInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="HU_Number__c"]'
+        );
+        huInput.value = 'HU-2002';
+        huInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getSaveButton().disabled).toBe(false);
+
+        huInput.value = '';
+        huInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getSaveButton().disabled).toBe(true);
+    });
+
+    it('disables update button when editing an existing HU without changes and enables when modified', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit(mockHUs);
+        await flushPromises();
+
+        const editButton = element.shadowRoot.querySelector(
+            'lightning-button-icon[title="Editar"]'
+        );
+        editButton.click();
+        await flushPromises();
+
+        const getUpdateButton = () =>
+            [
+                ...element.shadowRoot.querySelectorAll('lightning-button')
+            ].find((button) => button.label === 'Actualizar HU');
+
+        expect(getUpdateButton()).not.toBeNull();
+        expect(getUpdateButton().disabled).toBe(true);
+
+        const nameInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="Name__c"]'
+        );
+        nameInput.value = 'Nombre modificado';
+        nameInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getUpdateButton().disabled).toBe(false);
+
+        nameInput.value = 'Alta de acceso';
+        nameInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getUpdateButton().disabled).toBe(true);
+    });
+
+    it('enables update button when a checkbox is toggled', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit(mockHUs);
+        await flushPromises();
+
+        const editButton = element.shadowRoot.querySelector(
+            'lightning-button-icon[title="Editar"]'
+        );
+        editButton.click();
+        await flushPromises();
+
+        const getUpdateButton = () =>
+            [
+                ...element.shadowRoot.querySelectorAll('lightning-button')
+            ].find((button) => button.label === 'Actualizar HU');
+
+        expect(getUpdateButton().disabled).toBe(true);
+
+        const toggleInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="Solo_DevOps__c"]'
+        );
+        toggleInput.checked = true;
+        toggleInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getUpdateButton().disabled).toBe(false);
+
+        toggleInput.checked = false;
+        toggleInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        expect(getUpdateButton().disabled).toBe(true);
+    });
+
+    it('disables update button after successfully saving changes on an existing record', async () => {
+        saveHU.mockResolvedValue({
+            ...mockHUs[0],
+            Name__c: 'Nombre modificado'
+        });
+
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit(mockHUs);
+        await flushPromises();
+
+        const editButton = element.shadowRoot.querySelector(
+            'lightning-button-icon[title="Editar"]'
+        );
+        editButton.click();
+        await flushPromises();
+
+        const huInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="HU_Number__c"]'
+        );
+        huInput.reportValidity = jest.fn().mockReturnValue(true);
+
+        const nameInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="Name__c"]'
+        );
+        nameInput.value = 'Nombre modificado';
+        nameInput.dispatchEvent(new CustomEvent('change'));
+        await flushPromises();
+
+        const getUpdateButton = () =>
+            [
+                ...element.shadowRoot.querySelectorAll('lightning-button')
+            ].find((button) => button.label === 'Actualizar HU');
+
+        expect(getUpdateButton().disabled).toBe(false);
+
+        getUpdateButton().click();
+        await flushPromises();
+
+        expect(saveHU).toHaveBeenCalled();
+        expect(getUpdateButton().disabled).toBe(true);
     });
 });
