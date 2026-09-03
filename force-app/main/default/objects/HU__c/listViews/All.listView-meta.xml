@@ -6,7 +6,6 @@
     <columns>NAME</columns>
     <columns>HU_Number__c</columns>
     <columns>HU_Status__c</columns>
-    <columns>Permission_Requests__c</columns>
     <columns>Package_Path__c</columns>
     <columns>LAST_UPDATE</columns>
 </ListView>

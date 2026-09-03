@@ -7,7 +7,6 @@ private class HuControllerTest {
             Package_Path__c = '/packages/hu1001/package.xml',
             Test_Text__c = 'TestClassOne TestClassTwo',
             HU_Status__c = 'Nuevo',
-            Permission_Requests__c = 2,
             Has_Data__c = true
         );
 
@@ -25,14 +24,12 @@ private class HuControllerTest {
         insert hu;
 
         hu.HU_Status__c = 'En desarrollo';
-        hu.Permission_Requests__c = 5;
 
         Test.startTest();
         HU__c updated = HuController.saveHU(hu);
         Test.stopTest();
 
         System.assertEquals('En desarrollo', updated.HU_Status__c);
-        System.assertEquals(5, updated.Permission_Requests__c);
     }
 
     @isTest
@@ -50,21 +47,69 @@ private class HuControllerTest {
     }
 
     @isTest
-    static void testSaveHUWithNegativePermissionRequestsThrows() {
+    static void testSavePermissionRequest() {
+        HU__c hu = new HU__c(HU_Number__c = 'HU-3003', HU_Status__c = 'Nuevo');
+        insert hu;
+
+        Permission_Request__c permissionRequest = new Permission_Request__c(
+            HU__c = hu.Id,
+            Request_Number__c = 'REQ-100',
+            Description__c = 'Acceso al repositorio',
+            Status__c = 'Nuevo'
+        );
+
+        Test.startTest();
+        Permission_Request__c saved = HuController.savePermissionRequest(permissionRequest);
+        List<Permission_Request__c> requests = HuController.getPermissionRequests(hu.Id);
+        HuController.deletePermissionRequest(saved.Id);
+        Test.stopTest();
+
+        System.assertEquals('REQ-100', saved.Request_Number__c);
+        System.assertEquals(1, requests.size());
+        System.assertEquals(0, [SELECT count() FROM Permission_Request__c WHERE Id = :saved.Id]);
+    }
+
+    @isTest
+    static void testSavePermissionRequestWithoutNumberThrows() {
         HU__c hu = new HU__c(
             HU_Number__c = 'HU-3003',
-            HU_Status__c = 'Nuevo',
-            Permission_Requests__c = -1
+            HU_Status__c = 'Nuevo'
         );
+        insert hu;
 
         Boolean threw = false;
         try {
-            HuController.saveHU(hu);
+            HuController.savePermissionRequest(
+                new Permission_Request__c(HU__c = hu.Id, Description__c = 'Descripción')
+            );
         } catch (AuraHandledException e) {
             threw = true;
         }
 
-        System.assert(threw, 'Expected an AuraHandledException for negative permission requests.');
+        System.assert(threw, 'Expected an AuraHandledException when the request number is blank.');
+    }
+
+    @isTest
+    static void testClosingMultipleProductionClosesRelatedHUs() {
+        HU__c relatedHu = new HU__c(
+            HU_Number__c = 'HU-3501',
+            HU_Status__c = 'En pruebas'
+        );
+        HU__c primaryHu = new HU__c(
+            HU_Number__c = 'HU-3500',
+            HU_Status__c = 'Cerrado',
+            Is_Multiple_Production__c = true,
+            Multiple_Production_HU_Numbers__c = 'HU-3501'
+        );
+        insert relatedHu;
+        insert primaryHu;
+
+        Test.startTest();
+        HuController.saveHU(primaryHu);
+        Test.stopTest();
+
+        relatedHu = [SELECT HU_Status__c FROM HU__c WHERE Id = :relatedHu.Id];
+        System.assertEquals('Cerrado', relatedHu.HU_Status__c);
     }
 
     @isTest

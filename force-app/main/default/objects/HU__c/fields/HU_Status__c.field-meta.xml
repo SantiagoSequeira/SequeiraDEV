@@ -31,6 +31,21 @@
                 <label>En pruebas</label>
             </value>
             <value>
+                <fullName>En pruebas PO</fullName>
+                <default>false</default>
+                <label>En pruebas PO</label>
+            </value>
+            <value>
+                <fullName>En paso a produccion</fullName>
+                <default>false</default>
+                <label>En paso a produccion</label>
+            </value>
+            <value>
+                <fullName>Revision de error</fullName>
+                <default>false</default>
+                <label>Revision de error</label>
+            </value>
+            <value>
                 <fullName>Bloqueado</fullName>
                 <default>false</default>
                 <label>Bloqueado</label>

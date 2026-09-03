@@ -2,3 +2,59 @@
 .hu-manager table td {
     vertical-align: middle;
 }
+
+.hu-check-grid {
+    display: grid;
+    gap: 0.75rem 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hu-check-grid__item {
+    min-height: 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .hu-check-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.production-banner {
+    border-left: 4px solid;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+}
+
+.production-banner__title {
+    font-weight: 700;
+}
+
+.production-banner_error {
+    background: #fbeaea;
+    border-color: #ba0517;
+    color: #640d14;
+}
+
+.production-banner_warning {
+    background: #fff4e5;
+    border-color: #dd7a01;
+    color: #8c4b00;
+}
+
+.production-banner_success {
+    background: #e3f3e8;
+    border-color: #2e844a;
+    color: #194e31;
+}
+
+.hu-manager .production-row_error td {
+    background: #fdf1f1;
+}
+
+.hu-manager .production-row_warning td {
+    background: #fff8ed;
+}
+
+.hu-manager .production-row_success td {
+    background: #eff8f1;
+}

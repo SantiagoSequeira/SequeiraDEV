@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Branch__c</fullName>
+    <label>Rama</label>
+    <description>Git branch associated with this HU.</description>
+    <inlineHelpText>Rama de Git relacionada con esta HU.</inlineHelpText>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <caseSensitive>false</caseSensitive>
+    <unique>false</unique>
+</CustomField>

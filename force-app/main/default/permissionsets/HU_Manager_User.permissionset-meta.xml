@@ -12,6 +12,25 @@
         <viewAllRecords>true</viewAllRecords>
         <modifyAllRecords>false</modifyAllRecords>
     </objectPermissions>
+    <objectPermissions>
+        <object>Permission_Request__c</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <fieldPermissions>
+        <field>HU__c.Branch__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.Name__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
     <fieldPermissions>
         <field>HU__c.Package_Path__c</field>
         <readable>true</readable>
@@ -19,11 +38,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <field>HU__c.Test_Text__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>HU__c.Permission_Requests__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
@@ -53,12 +67,37 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
+        <field>HU__c.Solo_DevOps__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.Guide_Sent__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.Is_Multiple_Production__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.Multiple_Production_HU_Numbers__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
         <field>HU__c.Notes__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
         <field>HU__c.External_Reference__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Permission_Request__c.Description__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>

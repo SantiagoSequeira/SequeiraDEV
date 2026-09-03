@@ -35,6 +35,14 @@
                         ></lightning-input>
                     </div>
                     <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input
+                            data-field="Name__c"
+                            label="Nombre"
+                            value={form.Name__c}
+                            onchange={handleFieldChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
                         <lightning-combobox
                             data-field="HU_Status__c"
                             label="Estado de HU"
@@ -43,16 +51,47 @@
                             onchange={handleFieldChange}
                         ></lightning-combobox>
                     </div>
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
-                        <lightning-input
-                            data-validate="true"
-                            data-field="Permission_Requests__c"
-                            type="number"
-                            min="0"
-                            label="Nro de solicitudes de permisos"
-                            value={form.Permission_Requests__c}
-                            onchange={handleFieldChange}
-                        ></lightning-input>
+                </div>
+
+                <template if:true={showProductionReadinessBanner}>
+                    <div class={productionReadiness.className} role="status">
+                        <p class="production-banner__title">{productionReadiness.title}</p>
+                        <ul class="slds-list_dotted slds-m-left_medium">
+                            <template for:each={productionReadiness.items} for:item="item">
+                                <li key={item}>{item}</li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+
+                <template if:true={showErrorReviewBanner}>
+                    <div class="production-banner production-banner_error" role="status">
+                        <p class="production-banner__title">Revision de error</p>
+                        <p>La HU requiere revision antes de continuar.</p>
+                    </div>
+                </template>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-grid slds-grid_vertical-align-end slds-gutters_x-small">
+                            <div class="slds-col">
+                                <lightning-input
+                                    data-field="Branch__c"
+                                    label="Rama"
+                                    value={form.Branch__c}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button-icon
+                                    icon-name="utility:copy_to_clipboard"
+                                    alternative-text="Copiar rama"
+                                    title="Copiar rama"
+                                    data-field="Branch__c"
+                                    onclick={handleCopy}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -141,9 +180,9 @@
 
                 <div class="slds-m-top_medium">
                     <h3 class="slds-text-heading_x-small slds-m-bottom_x-small">Checks</h3>
-                    <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="hu-check-grid">
                         <template for:each={checkItems} for:item="check">
-                            <div key={check.field} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <div key={check.field} class="hu-check-grid__item">
                                 <lightning-input
                                     type="toggle"
                                     label={check.label}
@@ -156,6 +195,18 @@
                     </div>
                 </div>
 
+                <template if:true={showMultipleProductionHUs}>
+                    <div class="slds-m-top_small">
+                        <lightning-textarea
+                            data-field="Multiple_Production_HU_Numbers__c"
+                            label="Nros de HU del paso multiple"
+                            placeholder="HU-1001; HU-1002; HU-1003"
+                            value={form.Multiple_Production_HU_Numbers__c}
+                            onchange={handleFieldChange}
+                        ></lightning-textarea>
+                    </div>
+                </template>
+
                 <div class="slds-m-top_medium slds-text-align_right">
                     <lightning-button
                         variant="brand"
@@ -166,6 +217,102 @@
                 </div>
             </div>
 
+            <template if:true={isEditing}>
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                        <h2 class="slds-text-heading_small">Solicitudes de permisos</h2>
+                        <lightning-button
+                            label="Nueva solicitud"
+                            icon-name="utility:add"
+                            onclick={handleNewPermissionRequest}
+                        ></lightning-button>
+                    </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input
+                                data-request-validate="true"
+                                data-field="Request_Number__c"
+                                label="Nro de solicitud"
+                                required
+                                value={permissionRequestForm.Request_Number__c}
+                                onchange={handlePermissionRequestFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-combobox
+                                data-field="Status__c"
+                                label="Estado"
+                                value={permissionRequestForm.Status__c}
+                                options={requestStatusOptions}
+                                onchange={handlePermissionRequestFieldChange}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-align-bottom">
+                            <lightning-button
+                                variant="brand"
+                                label={permissionRequestSaveLabel}
+                                onclick={handleSavePermissionRequest}
+                                disabled={isSavingPermissionRequest}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-textarea
+                            data-field="Description__c"
+                            label="Descripcion"
+                            value={permissionRequestForm.Description__c}
+                            onchange={handlePermissionRequestFieldChange}
+                        ></lightning-textarea>
+                    </div>
+
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-top_medium">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">Nro de solicitud</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template if:true={permissionRequests.length}>
+                                <template for:each={permissionRequests} for:item="permissionRequest">
+                                    <tr key={permissionRequest.Id}>
+                                        <td>{permissionRequest.Request_Number__c}</td>
+                                        <td>{permissionRequest.Description__c}</td>
+                                        <td>{permissionRequest.Status__c}</td>
+                                        <td>
+                                            <lightning-button-icon
+                                                icon-name="utility:edit"
+                                                alternative-text="Editar solicitud"
+                                                title="Editar solicitud"
+                                                data-id={permissionRequest.Id}
+                                                onclick={handleEditPermissionRequest}
+                                            ></lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:delete"
+                                                alternative-text="Eliminar solicitud"
+                                                title="Eliminar solicitud"
+                                                data-id={permissionRequest.Id}
+                                                onclick={handleDeletePermissionRequest}
+                                            ></lightning-button-icon>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                            <template if:false={permissionRequests.length}>
+                                <tr>
+                                    <td colspan="4" class="slds-text-color_weak">
+                                        No hay solicitudes para esta HU.
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+
             <!-- List -->
             <div class="slds-box">
                 <h2 class="slds-text-heading_small slds-m-bottom_small">
@@ -175,19 +322,64 @@
                     <table class="slds-table slds-table_bordered slds-table_cell-buffer">
                         <thead>
                             <tr class="slds-line-height_reset">
-                                <th scope="col">Nro HU</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col">Solicitudes</th>
+                                <th scope="col">
+                                    <button class="slds-button slds-button_reset" data-field="HU_Number__c" onclick={handleSort}>
+                                        Nro HU
+                                        <lightning-icon icon-name={huNumberSortIcon} size="xx-small"></lightning-icon>
+                                    </button>
+                                </th>
+                                <th scope="col">
+                                    <button class="slds-button slds-button_reset" data-field="Name__c" onclick={handleSort}>
+                                        Nombre
+                                        <lightning-icon icon-name={huNameSortIcon} size="xx-small"></lightning-icon>
+                                    </button>
+                                </th>
+                                <th scope="col">
+                                    <button class="slds-button slds-button_reset" data-field="HU_Status__c" onclick={handleSort}>
+                                        Estado
+                                        <lightning-icon icon-name={huStatusSortIcon} size="xx-small"></lightning-icon>
+                                    </button>
+                                </th>
+                                <th scope="col">
+                                    <button class="slds-button slds-button_reset" data-field="CreatedDate" onclick={handleSort}>
+                                        Fecha de creacion
+                                        <lightning-icon icon-name={huCreatedDateSortIcon} size="xx-small"></lightning-icon>
+                                    </button>
+                                </th>
+                                <th scope="col">
+                                    <button class="slds-button slds-button_reset" data-field="LastModifiedDate" onclick={handleSort}>
+                                        Fecha de modificacion
+                                        <lightning-icon icon-name={huLastModifiedDateSortIcon} size="xx-small"></lightning-icon>
+                                    </button>
+                                </th>
                                 <th scope="col">Checks</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template for:each={hus} for:item="hu">
-                                <tr key={hu.Id}>
+                                <tr key={hu.Id} class={hu.productionRowClass}>
                                     <td>{hu.HU_Number__c}</td>
+                                    <td>{hu.Name__c}</td>
                                     <td>{hu.HU_Status__c}</td>
-                                    <td>{hu.Permission_Requests__c}</td>
+                                    <td>
+                                        <lightning-formatted-date-time
+                                            value={hu.CreatedDate}
+                                            year="numeric"
+                                            month="2-digit"
+                                            day="2-digit"
+                                        ></lightning-formatted-date-time>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-date-time
+                                            value={hu.LastModifiedDate}
+                                            year="numeric"
+                                            month="2-digit"
+                                            day="2-digit"
+                                            hour="2-digit"
+                                            minute="2-digit"
+                                        ></lightning-formatted-date-time>
+                                    </td>
                                     <td>{hu.checksSummary}</td>
                                     <td>
                                         <lightning-button-icon

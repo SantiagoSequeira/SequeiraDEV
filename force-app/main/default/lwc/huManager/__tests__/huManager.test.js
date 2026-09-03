@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import HuManager from 'c/huManager';
 import getHUs from '@salesforce/apex/HuController.getHUs';
 import saveHU from '@salesforce/apex/HuController.saveHU';
+import getPermissionRequests from '@salesforce/apex/HuController.getPermissionRequests';
 
 jest.mock(
     '@salesforce/apex/HuController.getHUs',
@@ -27,6 +28,36 @@ jest.mock(
 );
 
 jest.mock(
+    '@salesforce/apex/HuController.getPermissionRequests',
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    '@salesforce/apex/HuController.savePermissionRequest',
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    '@salesforce/apex/HuController.deletePermissionRequest',
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
     '@salesforce/apex/HuController.deleteHU',
     () => {
         return {
@@ -40,8 +71,9 @@ const mockHUs = [
     {
         Id: 'a01000000000001AAA',
         HU_Number__c: 'HU-1001',
+        Name__c: 'Alta de acceso',
+        Branch__c: 'feature/HU-1001',
         HU_Status__c: 'Nuevo',
-        Permission_Requests__c: 3,
         Package_Path__c: '/packages/hu1001/package.xml',
         Test_Text__c: 'TestOne TestTwo',
         Has_Data__c: true,
@@ -77,6 +109,25 @@ describe('c-hu-manager', () => {
         expect(rows.length).toBe(1);
         const firstCell = rows[0].querySelector('td');
         expect(firstCell.textContent).toBe('HU-1001');
+        expect(getPermissionRequests).not.toHaveBeenCalled();
+    });
+
+    it('renders the copyable branch field', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit([]);
+        await flushPromises();
+
+        const branchInput = element.shadowRoot.querySelector(
+            'lightning-input[data-field="Branch__c"]'
+        );
+        const copyButton = element.shadowRoot.querySelector(
+            'lightning-button-icon[data-field="Branch__c"]'
+        );
+
+        expect(branchInput).not.toBeNull();
+        expect(copyButton).not.toBeNull();
     });
 
     it('shows an empty state when there are no HU records', async () => {
