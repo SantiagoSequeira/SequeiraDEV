@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HU_Status__c</fullName>
+    <label>HU Status</label>
+    <description>Current status of the HU.</description>
+    <inlineHelpText>Current status of the HU lifecycle.</inlineHelpText>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Nuevo</fullName>
+                <default>true</default>
+                <label>Nuevo</label>
+            </value>
+            <value>
+                <fullName>En analisis</fullName>
+                <default>false</default>
+                <label>En análisis</label>
+            </value>
+            <value>
+                <fullName>En desarrollo</fullName>
+                <default>false</default>
+                <label>En desarrollo</label>
+            </value>
+            <value>
+                <fullName>En pruebas</fullName>
+                <default>false</default>
+                <label>En pruebas</label>
+            </value>
+            <value>
+                <fullName>Bloqueado</fullName>
+                <default>false</default>
+                <label>Bloqueado</label>
+            </value>
+            <value>
+                <fullName>Cerrado</fullName>
+                <default>false</default>
+                <label>Cerrado</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

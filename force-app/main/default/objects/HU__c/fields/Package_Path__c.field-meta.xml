@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Package_Path__c</fullName>
+    <label>Package Path</label>
+    <description>XML package path associated with this HU.</description>
+    <inlineHelpText>Path of the XML package related to this HU.</inlineHelpText>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <caseSensitive>false</caseSensitive>
+    <unique>false</unique>
+</CustomField>

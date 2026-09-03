@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HU_Number__c</fullName>
+    <label>HU Number</label>
+    <description>Business identifier of the HU (e.g. HU-1234).</description>
+    <inlineHelpText>Enter the HU number used to identify this record (required).</inlineHelpText>
+    <type>Text</type>
+    <length>40</length>
+    <required>true</required>
+    <unique>true</unique>
+    <caseSensitive>false</caseSensitive>
+    <externalId>true</externalId>
+    <trackTrending>false</trackTrending>
+</CustomField>

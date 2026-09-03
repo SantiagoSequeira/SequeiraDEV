@@ -1,0 +1,219 @@
+<template>
+    <lightning-card title={cardTitle} icon-name="custom:custom63" class="hu-manager">
+        <div slot="actions">
+            <lightning-input
+                type="search"
+                label="Buscar por Nro de HU"
+                variant="label-hidden"
+                placeholder="Buscar por Nro de HU..."
+                value={searchTerm}
+                onchange={handleSearchChange}
+            ></lightning-input>
+        </div>
+
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <!-- Form -->
+            <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <h2 class="slds-text-heading_small">{formTitle}</h2>
+                    <lightning-button
+                        label="Nueva HU"
+                        icon-name="utility:add"
+                        onclick={handleNew}
+                    ></lightning-button>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input
+                            data-validate="true"
+                            data-field="HU_Number__c"
+                            label="Nro de HU"
+                            required
+                            value={form.HU_Number__c}
+                            onchange={handleFieldChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-combobox
+                            data-field="HU_Status__c"
+                            label="Estado de HU"
+                            value={form.HU_Status__c}
+                            options={statusOptions}
+                            onchange={handleFieldChange}
+                        ></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input
+                            data-validate="true"
+                            data-field="Permission_Requests__c"
+                            type="number"
+                            min="0"
+                            label="Nro de solicitudes de permisos"
+                            value={form.Permission_Requests__c}
+                            onchange={handleFieldChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-grid slds-grid_vertical-align-end slds-gutters_x-small">
+                            <div class="slds-col">
+                                <lightning-input
+                                    data-field="Package_Path__c"
+                                    label="Package (path XML)"
+                                    value={form.Package_Path__c}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button-icon
+                                    icon-name="utility:copy_to_clipboard"
+                                    alternative-text="Copiar package"
+                                    title="Copiar package"
+                                    data-field="Package_Path__c"
+                                    onclick={handleCopy}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-grid slds-grid_vertical-align-end slds-gutters_x-small">
+                            <div class="slds-col">
+                                <lightning-textarea
+                                    data-field="Test_Text__c"
+                                    label="Tests (separados por espacios)"
+                                    value={form.Test_Text__c}
+                                    onchange={handleFieldChange}
+                                ></lightning-textarea>
+                            </div>
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button-icon
+                                    icon-name="utility:copy_to_clipboard"
+                                    alternative-text="Copiar tests"
+                                    title="Copiar tests"
+                                    data-field="Test_Text__c"
+                                    onclick={handleCopy}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-grid slds-grid_vertical-align-end slds-gutters_x-small">
+                            <div class="slds-col">
+                                <lightning-textarea
+                                    data-field="Notes__c"
+                                    label="Notas"
+                                    value={form.Notes__c}
+                                    onchange={handleFieldChange}
+                                ></lightning-textarea>
+                            </div>
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button-icon
+                                    icon-name="utility:copy_to_clipboard"
+                                    alternative-text="Copiar notas"
+                                    title="Copiar notas"
+                                    data-field="Notes__c"
+                                    onclick={handleCopy}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            data-field="External_Reference__c"
+                            label="Referencia externa"
+                            value={form.External_Reference__c}
+                            onchange={handleFieldChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+
+                <div class="slds-m-top_medium">
+                    <h3 class="slds-text-heading_x-small slds-m-bottom_x-small">Checks</h3>
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <template for:each={checkItems} for:item="check">
+                            <div key={check.field} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input
+                                    type="toggle"
+                                    label={check.label}
+                                    data-field={check.field}
+                                    checked={check.value}
+                                    onchange={handleCheckChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button
+                        variant="brand"
+                        label={saveButtonLabel}
+                        onclick={handleSave}
+                        disabled={isSaving}
+                    ></lightning-button>
+                </div>
+            </div>
+
+            <!-- List -->
+            <div class="slds-box">
+                <h2 class="slds-text-heading_small slds-m-bottom_small">
+                    HUs guardadas ({resultsCount})
+                </h2>
+                <template if:true={hasResults}>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">Nro HU</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Solicitudes</th>
+                                <th scope="col">Checks</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={hus} for:item="hu">
+                                <tr key={hu.Id}>
+                                    <td>{hu.HU_Number__c}</td>
+                                    <td>{hu.HU_Status__c}</td>
+                                    <td>{hu.Permission_Requests__c}</td>
+                                    <td>{hu.checksSummary}</td>
+                                    <td>
+                                        <lightning-button-icon
+                                            icon-name="utility:edit"
+                                            alternative-text="Editar"
+                                            title="Editar"
+                                            data-id={hu.Id}
+                                            onclick={handleEdit}
+                                        ></lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete"
+                                            alternative-text="Eliminar"
+                                            title="Eliminar"
+                                            data-id={hu.Id}
+                                            onclick={handleDelete}
+                                        ></lightning-button-icon>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasResults}>
+                    <p class="slds-text-color_weak">No hay HUs para mostrar.</p>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>
