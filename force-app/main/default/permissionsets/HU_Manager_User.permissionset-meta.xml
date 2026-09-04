@@ -27,6 +27,26 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
+        <field>HU__c.Rollback_Branch__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.RFC__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.DEVOPS__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>HU__c.Pipeline_Number__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
         <field>HU__c.Name__c</field>
         <readable>true</readable>
         <editable>true</editable>

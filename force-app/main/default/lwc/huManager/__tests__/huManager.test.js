@@ -151,6 +151,11 @@ describe('c-hu-manager', () => {
         getHUs.emit([]);
         await flushPromises();
 
+        const newButton = [
+            ...element.shadowRoot.querySelectorAll('lightning-button')
+        ].find((button) => button.label === 'Nueva HU');
+        newButton.click();
+
         const saveButton = [
             ...element.shadowRoot.querySelectorAll('lightning-button')
         ].find((button) => button.label === 'Guardar HU');
@@ -159,5 +164,30 @@ describe('c-hu-manager', () => {
         await flushPromises();
 
         expect(saveHU).not.toHaveBeenCalled();
+    });
+
+    it('enables saving only after the form changes', async () => {
+        const element = createElement('c-hu-manager', { is: HuManager });
+        document.body.appendChild(element);
+
+        getHUs.emit([]);
+        await flushPromises();
+
+        element.handleNew();
+
+        const saveButton = [
+            ...element.shadowRoot.querySelectorAll('lightning-button')
+        ].find((button) => button.label === 'Guardar HU');
+        expect(saveButton.disabled).toBe(true);
+
+        element.handleFieldChange({
+            target: {
+                dataset: { field: 'HU_Number__c' },
+                value: 'HU-1002'
+            }
+        });
+        await flushPromises();
+
+        expect(saveButton.disabled).toBe(false);
     });
 });

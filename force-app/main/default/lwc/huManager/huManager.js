@@ -45,6 +45,10 @@ const DEFAULT_FORM = {
     HU_Number__c: '',
     Name__c: '',
     Branch__c: '',
+    Rollback_Branch__c: '',
+    RFC__c: '',
+    DEVOPS__c: '',
+    Pipeline_Number__c: '',
     Package_Path__c: '',
     Test_Text__c: '',
     HU_Status__c: 'Nuevo',
@@ -77,9 +81,12 @@ export default class HuManager extends LightningElement {
     checkFields = CHECK_FIELDS;
 
     form = { ...DEFAULT_FORM };
+    savedFormSnapshot = JSON.stringify(DEFAULT_FORM);
     permissionRequestForm = { ...DEFAULT_PERMISSION_REQUEST };
+    isModalOpen = false;
     searchTerm = '';
     isSaving = false;
+    isRefreshing = false;
     isSavingPermissionRequest = false;
     wiredHUsResult;
     hus = [];
@@ -110,6 +117,24 @@ export default class HuManager extends LightningElement {
 
     get saveButtonLabel() {
         return this.isEditing ? 'Actualizar HU' : 'Guardar HU';
+    }
+
+    get isFormDirty() {
+        return JSON.stringify(this.form) !== this.savedFormSnapshot;
+    }
+
+    get isSaveDisabled() {
+        return this.isSaving || !this.isFormDirty;
+    }
+
+    get modalClass() {
+        return this.isModalOpen
+            ? 'slds-modal slds-fade-in-open'
+            : 'slds-modal';
+    }
+
+    get isRefreshDisabled() {
+        return this.isRefreshing;
     }
 
     get hasResults() {
@@ -176,6 +201,18 @@ export default class HuManager extends LightningElement {
         if (!this.form.Guide_Sent__c) {
             pendingItems.push('Enviar la guia.');
         }
+        if (
+            !this.form.Solo_DevOps__c &&
+            !String(this.form.RFC__c || '').trim()
+        ) {
+            pendingItems.push('Cargar el Nro de RFC.');
+        }
+        if (!String(this.form.DEVOPS__c || '').trim()) {
+            pendingItems.push('Cargar el Nro de DEVOPS.');
+        }
+        if (!String(this.form.Pipeline_Number__c || '').trim()) {
+            pendingItems.push('Cargar el Nro de pipeline.');
+        }
 
         if (pendingItems.length) {
             return {
@@ -202,6 +239,34 @@ export default class HuManager extends LightningElement {
 
     get resultsCount() {
         return this.hus ? this.hus.length : 0;
+    }
+
+    get productionQueueHUs() {
+        return this.hus.filter(
+            (hu) => hu.HU_Status__c === 'En paso a produccion'
+        );
+    }
+
+    get otherHUs() {
+        return this.hus.filter(
+            (hu) => hu.HU_Status__c !== 'En paso a produccion'
+        );
+    }
+
+    get hasProductionQueueHUs() {
+        return this.productionQueueHUs.length > 0;
+    }
+
+    get hasOtherHUs() {
+        return this.otherHUs.length > 0;
+    }
+
+    get productionQueueCount() {
+        return this.productionQueueHUs.length;
+    }
+
+    get otherResultsCount() {
+        return this.otherHUs.length;
     }
 
     setHUs(records) {
@@ -284,7 +349,10 @@ export default class HuManager extends LightningElement {
                 !hasPermissionRequests) ||
             (!hu.Solo_DevOps__c && !hu.Has_Test_Plans__c) ||
             !hu.Has_AFA_Approval__c ||
-            !hu.Guide_Sent__c;
+            !hu.Guide_Sent__c ||
+            (!hu.Solo_DevOps__c && !String(hu.RFC__c || '').trim()) ||
+            !String(hu.DEVOPS__c || '').trim() ||
+            !String(hu.Pipeline_Number__c || '').trim();
 
         if (hasBlockingRequirement) {
             return 'production-row production-row_error';
@@ -319,6 +387,19 @@ export default class HuManager extends LightningElement {
         this.searchTerm = event.target.value;
     }
 
+    async handleRefresh() {
+        if (!this.wiredHUsResult) {
+            return;
+        }
+
+        this.isRefreshing = true;
+        try {
+            await refreshApex(this.wiredHUsResult);
+        } finally {
+            this.isRefreshing = false;
+        }
+    }
+
     handleSort(event) {
         const { field } = event.currentTarget.dataset;
         if (this.sortField === field) {
@@ -334,8 +415,14 @@ export default class HuManager extends LightningElement {
 
     handleNew() {
         this.form = { ...DEFAULT_FORM };
+        this.savedFormSnapshot = JSON.stringify(this.form);
         this.permissionRequests = [];
         this.handleNewPermissionRequest();
+        this.isModalOpen = true;
+    }
+
+    handleCloseModal() {
+        this.isModalOpen = false;
     }
 
     handleEdit(event) {
@@ -347,6 +434,10 @@ export default class HuManager extends LightningElement {
                 HU_Number__c: record.HU_Number__c || '',
                 Name__c: record.Name__c || '',
                 Branch__c: record.Branch__c || '',
+                Rollback_Branch__c: record.Rollback_Branch__c || '',
+                RFC__c: record.RFC__c || '',
+                DEVOPS__c: record.DEVOPS__c || '',
+                Pipeline_Number__c: record.Pipeline_Number__c || '',
                 Package_Path__c: record.Package_Path__c || '',
                 Test_Text__c: record.Test_Text__c || '',
                 HU_Status__c: record.HU_Status__c || 'Nuevo',
@@ -363,8 +454,10 @@ export default class HuManager extends LightningElement {
                 Notes__c: record.Notes__c || '',
                 External_Reference__c: record.External_Reference__c || ''
             };
+            this.savedFormSnapshot = JSON.stringify(this.form);
             this.handleNewPermissionRequest();
             this.loadPermissionRequests();
+            this.isModalOpen = true;
         }
     }
 
@@ -424,6 +517,7 @@ export default class HuManager extends LightningElement {
             const savedHu = await saveHU({ hu: recordToSave });
             this.notifySuccess('HU guardada correctamente.');
             this.form = { ...DEFAULT_FORM, ...savedHu };
+            this.savedFormSnapshot = JSON.stringify(this.form);
             this.handleNewPermissionRequest();
             await refreshApex(this.wiredHUsResult);
             await this.loadPermissionRequests();
